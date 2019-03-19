@@ -2,12 +2,10 @@
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 
-// if the SVG area isn't empty when the browser loads,
-// remove it and replace it with a resized version of the chart
+// Select SVG Area... It may be empty
 var svgArea = d3.select("#scatter").select("svg");
 
-// SVG wrapper dimensions are determined by the current width and
-// height of the browser window.
+// Initialize SVG wrapper dimensions.
 var svgWidth = 960;
 var svgHeight = 500;
 
@@ -38,7 +36,7 @@ function xScale(censusData, width) {
     return xLinearScale;
 }
 
-// function used for updating x-scale var upon click on axis label
+// function used for updating y-scale var upon click on axis label
 function yScale(censusData, height) {
     // create scales
     var yLinearScale = d3.scaleLinear()
@@ -62,8 +60,7 @@ function renderYAxis(newYScale, yAxis) {
     return yAxis;
 }
 
-// function used for updating circles group with a transition to
-// new circles
+// function used for updating circles group with a transition to new circles
 function renderCircles(circlesGroup, newXScale, newYScale) {
     circlesGroup.selectAll("circle").transition()
         .duration(1000)
@@ -122,6 +119,7 @@ function updateToolTip(circlesGroup) {
 var chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// Process CSV Data
 d3.csv("assets/data/data.csv").then(function (censusData) {
     //console.log(censusData);
 
@@ -169,6 +167,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .attr("fill", 'lightskyblue')
         .attr("opacity", ".5")
 
+    // decorate circles with state abbr
     circlesGroup.append("text")
         .attr("x", d => xLinearScale(d[chosenXAxis]) - 7)
         .attr("y", d => yLinearScale(d[chosenYAxis] - .2))
@@ -180,7 +179,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
     // updateToolTip function above csv import
     var circlesGroup = updateToolTip(circlesGroup);
 
-    // Create group for  2 x- xis labels
+    // create group for 3 x-axis labels
     var xLabelsGroup = chartGroup.append("g")
         .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.bottom) + ")")
 
@@ -205,7 +204,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
         .classed("inactive", false)
         .text("Household Income (Median)");
 
-    // Create group for  2 y-axis labels
+    // create group for 3 y-axis labels
     var yLabelsGroup = chartGroup.append("g").attr("transform", "rotate(-90)");
 
     var healthcareLabel = yLabelsGroup.append("text")
@@ -312,7 +311,7 @@ d3.csv("assets/data/data.csv").then(function (censusData) {
             }
         });
 
-    // x axis labels event listener
+    // y axis labels event listener
     yLabelsGroup.selectAll("text")
         .on("click", function () {
             // get value of selection
